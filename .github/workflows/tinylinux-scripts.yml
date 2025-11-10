@@ -1,0 +1,42 @@
+name: Build and Release
+
+on:
+  push:
+    tags: 
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    
+    steps:
+    - name: Update system and install dependencies
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm base-devel git
+        
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Make build script executable
+      run: chmod +x ./build_all_profiles.sh
+        
+    - name: Run build script
+      run: ./build_all_profiles.sh
+      
+    - name: Create tar archive
+      run: |
+        # 使用当前 tag 名称作为文件名
+        TAG_NAME=${GITHUB_REF#refs/tags/}
+        tar -czf build-output-$TAG_NAME.tar.gz .
+        
+    - name: Upload release assets
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build-*.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
