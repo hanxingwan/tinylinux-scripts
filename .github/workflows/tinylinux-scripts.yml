@@ -9,6 +9,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            architecture: amd64
+          - runner: ubuntu-latest
+            architecture: arm64
     
     steps:
     - name: Update system and install dependencies
@@ -35,7 +42,8 @@ jobs:
       run: |
         # 使用当前 tag 名称作为文件名
         TAG_NAME=${GITHUB_REF#refs/tags/}
-        tar -czf build-output-$TAG_NAME.tar.gz .
+        FINAL_FILENAME="build-output-$TAG_NAME-${{ matrix.arch }}.tar.gz"
+        tar -czf "$FINAL_FILENAME" .
         
     - name: Upload release assets
       uses: softprops/action-gh-release@v1
