@@ -40,8 +40,7 @@ jobs:
 
     - name: Create final zip package
       run: |
-        VERSION_DIR=$(date '+%y.%m.%d')
-        sudo zip -r tinylinux-scripts-latest.zip "$VERSION_DIR" build_mods_driver.tar.bz2
+        ls -la
 
     - name: Upload release assets
       uses: softprops/action-gh-release@v1
