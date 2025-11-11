@@ -1019,7 +1019,7 @@ build_newroot()
     # Prepare locales
     [[ -d "$NEWROOT"/usr/lib/locale ]] && die "Unexpected directory: $NEWROOT/usr/lib/locale"
     [[ -d "$NEWROOT"/usr/lib64/locale ]] && die "Unexpected directory: $NEWROOT/usr/lib64/locale"
-    cp "$BUILDSCRIPTS/locale.gen" "$NEWROOT/etc/locale.gen" && chroot "$NEWROOT" /bin/bash -c "locale-gen"
+    sudo cp -rf "$BUILDSCRIPTS/locale.gen" /etc/locale.gen && sudo locale-gen && sudo rsync -auv "/usr/lib/locale/" "$NEWROOT/usr/lib/locale/"
     if [[ -d "$NEWROOT"/usr/lib && -d "$NEWROOT"/usr/lib64 && -d "$NEWROOT"/usr/lib/locale && ! -d "$NEWROOT"/usr/lib64/locale ]]; then
         mv "$NEWROOT"/usr/lib/locale "$NEWROOT"/usr/lib64/locale
     fi
