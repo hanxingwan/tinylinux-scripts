@@ -37,12 +37,15 @@ jobs:
         git submodule init
         git submodule update
         sudo ./build_all_profiles.sh
-        
+
+    - name: Create final zip package
+      run: |
+        VERSION_DIR=$(date '+%y.%m.%d')
+        sudo zip -r tinylinux-scripts-latest.zip "$VERSION_DIR" build_mods_driver.tar.bz2
+
     - name: Upload release assets
       uses: softprops/action-gh-release@v1
       with:
-        files: ｜
-          ${{ github.workspace }}/*.zip
-          ${{ github.workspace }}/aarch64/*
+        files: tinylinux-scripts-latest.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
