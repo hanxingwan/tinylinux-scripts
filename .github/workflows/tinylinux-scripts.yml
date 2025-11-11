@@ -37,17 +37,12 @@ jobs:
         git submodule init
         git submodule update
         sudo ./build_all_profiles.sh
-      
-    - name: Create tar archive
-      run: |
-        # 使用当前 tag 名称作为文件名
-        TAG_NAME=${GITHUB_REF#refs/tags/}
-        FINAL_FILENAME="build-output-$TAG_NAME-${{ matrix.arch }}.tar.gz"
-        sudo tar -czf "$FINAL_FILENAME" .
         
     - name: Upload release assets
       uses: softprops/action-gh-release@v1
       with:
-        files: build-*.tar.gz
+        files: ｜
+          ${{ github.workspace }}/*.zip
+          ${{ github.workspace }}/aarch64/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
